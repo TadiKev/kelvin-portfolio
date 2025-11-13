@@ -1,5 +1,6 @@
+
 // src/components/ContactSection.jsx
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Instagram,
   Linkedin,
@@ -16,10 +17,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 /**
- * ContactSection — Formspree integration (Vite) + react-toastify
+ * ContactSection — Formspree integration (Vite) + react-toastify + in-page modals
  *
  * - Uses import.meta.env.VITE_PUBLIC_FORMSPREE_URL for Vite.
  * - Keeps honeypot "hp" for spam protection, validations and accessibility.
+ * - Adds Booking + Pricing modals (polished experience).
  */
 export const ContactSection = ({
   email = "machakakelvin903@gmail.com",
@@ -37,6 +39,10 @@ export const ContactSection = ({
   const [form, setForm] = useState({ name: "", email: "", message: "", hp: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const statusRef = useRef(null);
+
+  // modal state
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
 
   // Vite env (fallback to your form id)
   const FORMSPREE_URL = import.meta?.env?.VITE_PUBLIC_FORMSPREE_URL || "https://formspree.io/f/mqawazjk";
@@ -127,10 +133,182 @@ export const ContactSection = ({
     }
   };
 
+  // --- Modal helpers ---
+
+  // open Calendly in a centered popup window
+  const openCalendlyPopup = (url) => {
+    try {
+      const w = 900, h = 700;
+      const left = window.screenX + Math.max(0, Math.floor((window.outerWidth - w) / 2));
+      const top = window.screenY + Math.max(0, Math.floor((window.outerHeight - h) / 2));
+      window.open(url, "calendlyPopup", `width=${w},height=${h},left=${left},top=${top},noopener,noreferrer`);
+    } catch (e) {
+      // fallback to new tab
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  // Request by email — close modal, prefill message and focus form
+  const requestByEmail = () => {
+    setShowBookingModal(false);
+    setForm((p) => ({
+      ...p,
+      message: "I'd like to book a 15-minute consult. My preferred times are: \n\n(1) \n(2) \n(3) ",
+    }));
+    // small timeout to ensure DOM updated, then focus name input
+    setTimeout(() => {
+      const el = document.querySelector("#name");
+      el?.focus();
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 80);
+  };
+
+  // basic escape key handling to close modals
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        if (showBookingModal) setShowBookingModal(false);
+        if (showPricingModal) setShowPricingModal(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showBookingModal, showPricingModal]);
+
+  // focus first actionable element when modal opens
+  useEffect(() => {
+    if (showBookingModal) {
+      setTimeout(() => {
+        const primary = document.querySelector("#booking-open-calendly");
+        primary?.focus();
+      }, 40);
+    }
+    if (showPricingModal) {
+      setTimeout(() => {
+        const firstSelect = document.querySelector("#pricing-first-select");
+        firstSelect?.focus();
+      }, 40);
+    }
+  }, [showBookingModal, showPricingModal]);
+
+  // sample package data (editable)
+  const packages = [
+    { id: "basic", title: "Basic", price: "$150", bullets: ["15-minute consult", "Project scoping"] },
+    { id: "pro", title: "Pro", price: "$400", bullets: ["1-2 week build", "2 revisions", "Support"] },
+    { id: "custom", title: "Custom", price: "Contact", bullets: ["Tailored solution", "Custom quote"] },
+  ];
+
   return (
     <section id="contact" className="py-24 px-4 bg-background">
       {/* Toast container (keeps toasts self-contained in this component) */}
       <ToastContainer />
+
+      {/* Booking Modal */}
+      {showBookingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Book a free consult"
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-md w-full p-6 shadow-lg">
+            <h4 className="text-lg font-semibold mb-2">Book a free 15-minute consult</h4>
+            <p className="text-sm text-muted-foreground mb-4">Choose an option</p>
+            <div className="flex gap-3">
+              <button
+                id="booking-open-calendly"
+                onClick={() => openCalendlyPopup(calendly)}
+                className="flex-1 px-4 py-2 rounded bg-primary text-white"
+              >
+                Open Calendly
+              </button>
+              <button
+                onClick={requestByEmail}
+                className="flex-1 px-4 py-2 rounded border"
+              >
+                Request by email
+              </button>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                aria-label="Close booking modal"
+                onClick={() => setShowBookingModal(false)}
+                className="text-sm text-muted-foreground"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pricing Modal */}
+      {showPricingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Packages and pricing"
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-3xl w-full p-6 shadow-lg">
+            <h4 className="text-lg font-semibold mb-4">Packages & Pricing</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {packages.map((pkg, idx) => (
+                <div key={pkg.id} className="p-4 border rounded flex flex-col">
+                  <h5 className="font-semibold">{pkg.title}</h5>
+                  <div className="text-xl font-bold mb-2">{pkg.price}</div>
+                  <ul className="mb-4 text-sm space-y-1 flex-1">
+                    {pkg.bullets.map((b, i) => (
+                      <li key={i}>• {b}</li>
+                    ))}
+                  </ul>
+                  <div className="flex gap-2">
+                    <a
+                      id={idx === 0 ? "pricing-first-select" : undefined}
+                      href={pkg.id === "custom" ? pricing : "#"}
+                      onClick={(e) => {
+                        if (pkg.id === "custom") {
+                          // navigate to pricing page (if you'd like)
+                          setShowPricingModal(false);
+                        } else {
+                          // for demo, close modal and prefill contact form for selection
+                          e.preventDefault();
+                          setShowPricingModal(false);
+                          setForm((p) => ({
+                            ...p,
+                            message: `I'm interested in the "${pkg.title}" package. Please get in touch.`,
+                          }));
+                          setTimeout(() => {
+                            document.querySelector("#name")?.focus();
+                          }, 80);
+                        }
+                      }}
+                      className="px-3 py-2 rounded bg-primary text-white"
+                    >
+                      {pkg.id === "custom" ? "Contact" : "Select"}
+                    </a>
+
+                    <a
+                      href={pkg.price === "$400" ? "#" : "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 rounded border"
+                    >
+                      Pay (optional)
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button aria-label="Close pricing modal" onClick={() => setShowPricingModal(false)} className="text-sm text-muted-foreground">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto max-w-5xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
@@ -142,21 +320,21 @@ export const ContactSection = ({
         </p>
 
         <div className="flex items-center justify-center gap-4 mb-12">
-          <a
-            href={calendly}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => setShowBookingModal(true)}
             className="px-5 py-3 rounded-md bg-primary text-white font-medium hover:opacity-95 transition-shadow shadow-md"
           >
             Book a free consult
-          </a>
+          </button>
 
-          <a
-            href={pricing}
+          <button
+            type="button"
+            onClick={() => setShowPricingModal(true)}
             className="px-5 py-3 rounded-md border border-primary text-primary hover:bg-primary/5 transition"
           >
             Packages & Pricing
-          </a>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -224,7 +402,7 @@ export const ContactSection = ({
             </div>
           </aside>
 
-          {/* Form */}
+           {/* Form */}
           <div className="bg-card p-8 rounded-lg shadow-xs">
             <h3 className="text-2xl font-semibold mb-4">Send a Message</h3>
 

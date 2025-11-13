@@ -5,7 +5,8 @@ const projects = [
   {
     id: 1,
     title: "Inventory Management System",
-    description: "Frontend for an inventory system — product lists, stock levels and management UI.",
+    description:
+      "Frontend for an inventory system — product lists, stock levels and management UI.",
     // your image file (spaces URL-encoded)
     image: "/projects/inventory%20management%20system.png",
     tags: ["React", "Vite", "TailwindCSS"],
@@ -13,24 +14,25 @@ const projects = [
     githubUrl: "https://github.com/TadiKev/barventory-frontend",
   },
   {
-  id: 3,
-  title: "Local Language Learning",
-  description: "A language learning platform that helps users practice and preserve local African languages through gamified lessons.",
-  image: "/projects/language-learning.png", 
-  tags: ["React", "Node.js", "MongoDB"],
-  demoUrl: "https://local-language-app.vercel.app",
-  githubUrl: "https://github.com/TadiKev/my-local-language-app",
-},
-{
-  id: 3,
-  title: "Smart Meter Reader Dashboard",
-  description: "An interactive analytics dashboard for visualizing energy consumption data using charts and filters.",
-  image: "/projects/meter-reader.png",
-  tags: ["React", "Django", "REST API"],
-  demoUrl: "https://your-frontend.vercel.app",   // replace with your live demo later
-  githubUrl: "https://github.com/TadiKev/django-react-meter-logger",
-}
-
+    id: 2,
+    title: "Local Language Learning",
+    description:
+      "A language learning platform that helps users practice and preserve local African languages through gamified lessons.",
+    image: "/projects/language-learning.png",
+    tags: ["React", "Node.js", "MongoDB"],
+    demoUrl: "https://local-language-app.vercel.app",
+    githubUrl: "https://github.com/TadiKev/my-local-language-app",
+  },
+  {
+    id: 3,
+    title: "Smart Meter Reader Dashboard",
+    description:
+      "An interactive analytics dashboard for visualizing energy consumption data using charts and filters.",
+    image: "/projects/meter-reader.png",
+    tags: ["React", "Django", "REST API"],
+    demoUrl: "https://your-frontend.vercel.app",
+    githubUrl: "https://github.com/TadiKev/django-react-meter-logger",
+  },
 ];
 
 export const ProjectsSection = () => {
@@ -42,7 +44,8 @@ export const ProjectsSection = () => {
         </h2>
 
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Here are some of my recent projects. Each project was carefully crafted with attention to detail, performance, and user experience.
+          Here are some of my recent projects. Each project was carefully
+          crafted with attention to detail, performance, and user experience.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -62,9 +65,9 @@ export const ProjectsSection = () => {
 
               <div className="p-6">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag) => (
+                  {project.tags.map((tag, i) => (
                     <span
-                      key={tag}
+                      key={`${project.id}-tag-${i}`}
                       className="px-2 py-1 text-xs font-medium border rounded-full bg-secondary text-secondary-foreground"
                     >
                       {tag}
@@ -73,7 +76,9 @@ export const ProjectsSection = () => {
                 </div>
 
                 <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
+                <p className="text-muted-foreground text-sm mb-4">
+                  {project.description}
+                </p>
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-3">
                     <a
