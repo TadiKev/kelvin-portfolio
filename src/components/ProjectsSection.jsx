@@ -1,4 +1,3 @@
-// src/components/ProjectsSection.jsx
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 
 const projects = [
