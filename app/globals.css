@@ -1,0 +1,143 @@
+/* Scan only the site's own folders for class names (never temp folders elsewhere on the machine). */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@source "../content";
+@source "../lib";
+
+/* Night pass: a dark field at night, lit by one amber pass of a satellite.
+   The crop-health ramp (soil → canopy) is the only other colour, used for data. */
+:root {
+  --bg: #f1f4f0;
+  --surface: #ffffff;
+  --raise: #e6ebe5;
+  --line: #d2dad2;
+  --text: #0c1813;
+  --muted: #4d5e55;
+  --accent: #8a5200;
+  --accent-soft: #f4e3c4;
+  --soil: #8a6a44;
+  --dry: #b9973f;
+  --sprout: #8fb24d;
+  --leaf: #4c955a;
+  --canopy: #2a6f4d;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #080d11;
+  --surface: #0e151a;
+  --raise: #141d24;
+  --line: #213039;
+  --text: #e6ecec;
+  --muted: #8d9ea6;
+  --accent: #e9b14c;
+  --accent-soft: #2a2112;
+  --soil: #6b4c2c;
+  --dry: #a7853a;
+  --sprout: #93b956;
+  --leaf: #4f9f5f;
+  --canopy: #2f8058;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raise: var(--raise);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-soil: var(--soil);
+  --color-dry: var(--dry);
+  --color-sprout: var(--sprout);
+  --color-leaf: var(--leaf);
+  --color-canopy: var(--canopy);
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+::selection { background: var(--accent); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Fine field-grid texture used behind sections. */
+.field-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--line) 55%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@keyframes reveal-lift {
+  from { transform: translateY(26px); }
+  to { transform: none; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-lift linear both;
+      animation-timeline: view();
+      animation-range: entry calc(0% + var(--reveal-delay, 0%)) entry 60%;
+    }
+  }
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gutter {
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+@media print {
+  .no-print { display: none !important; }
+  :root, :root[data-theme="dark"] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --raise: #f2f2f2;
+    --line: #d6d6d6;
+    --text: #111111;
+    --muted: #4a4a4a;
+    --accent: #7a4800;
+    color-scheme: light;
+  }
+  @page { size: A4; margin: 11mm 13mm; }
+  body { font-size: 11.5px; }
+  .gutter { padding-left: 0 !important; padding-right: 0 !important; }
+}

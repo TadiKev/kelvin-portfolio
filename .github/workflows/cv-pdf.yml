@@ -1,0 +1,42 @@
+name: CV PDF
+
+# Prints /cv to public/cv.pdf and commits it, so the downloadable CV always matches the site.
+# Runs when CV content changes, or by hand from the Actions tab.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "content/site.ts"
+      - "content/projects.ts"
+      - "app/cv/**"
+      - "app/globals.css"
+      - ".github/workflows/cv-pdf.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cv-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - name: Print the CV
+        run: |
+          npm start -- -p 3000 &
+          npx wait-on -t 60000 http://localhost:3000/cv
+          node scripts/cv-pdf.mjs http://localhost:3000
+      - name: Commit if it changed
+        run: |
+          if git diff --quiet -- public/cv.pdf; then echo "CV unchanged"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/cv.pdf
+          git commit -m "CV PDF: regenerate from /cv [skip ci]"
+          git push
