@@ -10,6 +10,7 @@ on:
       - "content/projects.ts"
       - "app/cv/**"
       - "app/globals.css"
+      - ".github/workflows/cv-pdf.yml"
 
 permissions:
   contents: write
