@@ -1,16 +1,42 @@
-# React + Vite
+# kelvinmachaka.dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portfolio of Kelvin Machaka, AI engineer in Harare, Zimbabwe.
 
-Currently, two official plugins are available:
+Next.js (App Router), TypeScript, Tailwind CSS 4 and Motion. Deployed on Vercel.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run it
 
-## React Compiler
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build
+npm run typecheck
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Node 20.9 or newer.
 
-## Expanding the ESLint configuration
+## Edit the content
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+All text lives in `content/`, not in the pages:
+
+- `content/site.ts`: name, contact details, experience, education, skills and services.
+- `content/projects.ts`: case studies. `featured: true` shows a project in Selected work; the others go to Earlier work. Describe only what the code really does.
+
+A link with an empty value (for example `linkedin: ""`) is hidden everywhere.
+
+## Contact form
+
+The form posts to Formspree. Set `NEXT_PUBLIC_FORMSPREE_URL` in Vercel to override the default endpoint in `content/site.ts`.
+
+## CV
+
+`/cv` is the CV as a web page; `public/cv.pdf` is the same page printed to A4. After changing CV content:
+
+```bash
+npm run build && npm start
+npm run cv:pdf     # needs Playwright: npm i -D playwright && npx playwright install chromium
+```
+
+## Deploy
+
+Push to `main`; Vercel builds and deploys. The domain `kelvinmachaka.dev` is set in Vercel → Project → Domains.
