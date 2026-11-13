@@ -44,7 +44,10 @@ export default function CvPage() {
               <a href={site.github}>github.com/TadiKev</a>
             </li>
             <li>
-              <a href={site.url}>kelvinmachaka.dev</a>
+              <a href={site.linkedin}>linkedin.com/in/kelvin-machaka</a>
+            </li>
+            <li>
+              <a href={site.url}>{site.displayUrl}</a>
             </li>
           </ul>
         </header>

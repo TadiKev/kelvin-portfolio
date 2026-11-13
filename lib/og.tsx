@@ -18,7 +18,7 @@ export function ogImage({ eyebrow, title, subtitle }: { eyebrow: string; title: 
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 24 }}>
             <div style={{ width: 14, height: 14, borderRadius: 7, background: "#e9b14c" }} />
-            kelvinmachaka.dev
+            Kelvin Machaka · AI Engineer
           </div>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", width: 480, height: 630, padding: 24, gap: 8, position: "relative" }}>

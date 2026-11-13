@@ -1,7 +1,9 @@
 export const site = {
   name: "Kelvin Machaka",
   role: "AI Engineer",
-  url: "https://kelvinmachaka.dev",
+  // Switch to the custom domain (e.g. https://kelvinmachaka.dev) once it is bought and added in Vercel.
+  url: "https://kelvin-portfolio-lac.vercel.app",
+  displayUrl: "kelvin-portfolio-lac.vercel.app",
   location: "Harare, Zimbabwe",
   coordinates: "17.83°S · 31.05°E",
   availability: "Available for freelance projects and remote roles",
@@ -10,8 +12,7 @@ export const site = {
   phoneHref: "tel:+263781255971",
   whatsapp: "https://wa.me/263781255971",
   github: "https://github.com/TadiKev",
-  // TODO(Kelvin): add LinkedIn URL. Links with an empty href are hidden.
-  linkedin: "",
+  linkedin: "https://www.linkedin.com/in/kelvin-machaka-571248303/",
   formspree: process.env.NEXT_PUBLIC_FORMSPREE_URL || "https://formspree.io/f/mqawazjk",
   cv: "/cv.pdf",
   photo: "/kelvin.jpg",

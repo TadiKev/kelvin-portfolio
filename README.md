@@ -1,6 +1,6 @@
-# kelvinmachaka.dev
+# Kelvin Machaka — portfolio
 
-Portfolio of Kelvin Machaka, AI engineer in Harare, Zimbabwe.
+Portfolio of Kelvin Machaka, AI engineer in Harare, Zimbabwe. Live at https://kelvin-portfolio-lac.vercel.app
 
 Next.js (App Router), TypeScript, Tailwind CSS 4 and Motion. Deployed on Vercel.
 
@@ -39,4 +39,6 @@ npm run cv:pdf     # needs Playwright: npm i -D playwright && npx playwright ins
 
 ## Deploy
 
-Push to `main`; Vercel builds and deploys. The domain `kelvinmachaka.dev` is set in Vercel → Project → Domains.
+Push to `main`; Vercel builds and deploys. Every push also runs the build on GitHub Actions (`.github/workflows/build.yml`).
+
+When a custom domain is bought: add it in Vercel → Project → Domains, then change `url` and `displayUrl` in `content/site.ts`.
